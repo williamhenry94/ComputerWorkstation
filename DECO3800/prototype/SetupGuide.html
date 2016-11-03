@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Prototype</title>
+		<link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/styling.css">
+        
+<!--		<link href="narrow-jumbotron.css" rel="stylesheet">-->
+		<style type="text/css"></style>
+		<style>
+		<style>
+			.panel panel-default {
+				padding: 70px;
+			}
+            
+            .category{
+                text-align: right;
+                margin-bottom: 5px;
+            }
+            .panel-body{
+                padding: 0px;
+            }
+            .adjustment{
+                border-top: 0px; !important
+                border-bottom-left-radius: 0px !important;
+                border-bottom-right-radius: 0px !important;
+                border-top-left-radius: 0px !important;
+                border-top-right-radius: 0px !important;
+            }
+            .list-group{
+                margin-bottom: 0px;
+            }
+            
+            #panel-modal{
+                border-width: 0px;            
+            }
+            
+            #container-modal{
+                width: inherit !important;
+            }
+            
+            #panel-body-new{
+                padding-bottom: 15px;
+            }
+            
+            #guide-body{
+                padding-bottom: 0px;
+            }
+            
+            
+</style>
+	</head>
+	<body>
+	<div class="container">
+        
+<!--
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-xs-right">
+            <li class="nav-item active">
+              <a class="nav-link" href="Index.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+-->
+        <nav class="navbar navbar-inverse navbar-fixed-top" style="background-image:linear-gradient(to bottom,#6A2885 0,#3B3040 100%);padding-bottom: 10px;padding-top: 10px;">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+<!--              <img src="images/masthead-logo-BB9-1-new.png">-->
+                <img src="https://static.uq.net.au/v1/logos/corporate/uq-logo-white.svg">
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav pull-right">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="SymptomChecker.html">Symptom Checker</a></li>
+                <li><a href="WorkStationAssessment.html">Workstation Assessment</a></li>
+                <li><a href="Exercises.html">Exercises</a></li>
+                <li><a href="SetupGuide.html">Setup Guide</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
+        </div>
+        
+        <div class="container" id="container_x">
+            <div class="exercise">
+                <div class="headers">
+                    <h3>Workstation Setup Guide</h3>
+<!--                <legend>Pick exercises that suits you based on body part</legend>-->
+                    <div class="category">
+                        Category of tools:
+                        <select id="categories">
+<!--
+                            <option>Desk & Table</option>
+                            <option>Computer</option>
+                            <option>Tablet</option>
+                            <option>Peripheral</option>
+-->
+                        </select>
+                    </div>
+                    <div class="headings_info">
+                        <h4 class="text-info" id="category-heading"></h4>
+                    </div>
+                </div>
+                <div class="container" id="content-container">
+
+                    </div>
+                </div>
+        </div>
+        <div id="insModal" role="dialog" class="modal fade">
+            <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Instructions</h4>
+              </div>
+              <div class="modal-body" id="guide-body">
+<!--                <p>Some text in the modal.</p>-->
+                  <div class="container" id="container-modal">
+<!--                    <div id="">-->
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+	
+      
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script>
+        $(document).ready(function(){
+            var selected;
+            $.get("http://ec2-52-221-232-152.ap-southeast-1.compute.amazonaws.com/computer-workstation/public/api/tools/category",function(data){
+                console.log(data);
+                for(var i=0;i<data.length;i++){
+                    $("#categories").append("<option value='"+data[i].category+"'>"+data[i].category+"</option>");
+                    if(i==0){
+                        selected=data[i].category;
+                    }
+                }
+                    
+                console.warn(selected);
+                $('#category-heading').text(selected);
+                getter(selected);
+                    
+            });
+            $(document).on("change","#categories",function(){
+                $('#category-heading').text($(this).val());
+                selected=$(this).val();
+                getter(selected);
+                
+                
+            });
+            
+            function getter(tool){
+                $.get("http://ec2-52-221-232-152.ap-southeast-1.compute.amazonaws.com/computer-workstation/public/api/tools/category/"+tool,function(data,status,xhr){
+                    if(status=='success'){
+                        console.log(data);
+                        $("#content-container").empty();
+                        var tools=data.tools;
+    //                    console.log(tools);
+                        for (var j=0; j<tools.length;j++){
+                            var adj= tools[j].adjustment;
+                            var tool_name=tools[j].tool_name;
+                            console.log(tool_name);
+                            var idN1=tool_name.replace(" & ","-");
+                            var idN2=idN1.replace(" ","-");
+                            var idN=idN2.replace(" ","-");
+                            $("#content-container").append("<div class='row'>"
+                                                          +'<div class="panel panel-info">'
+                                                          +'<div class="panel-heading">'
+                                                          +'<h3 class="panel-title">'+tool_name+'</h3>'
+                                                          +'</div>'
+                                                          +'<div class="panel-body">'
+                                                          +'<div id="main-'+idN+'">'
+                                                          +'</div>');
+                            console.log(adj.length);
+                            if(adj.length>0){
+                                for (var ii=0; ii<adj.length;ii++){
+                                    var guide=adj[ii].guide
+                                    var adj_name=adj[ii].adjustment;
+        //                            console.log(guide);
+                                    $("#main-"+idN).append('<div class="list-group">'
+                                                                +'<a href="#" class="list-group-item adjustment" data-toggle="modal" data-target="#insModal" id="'+adj[ii].adjustment_id+'">'
+                                                                +'<h4 class="list-group-item-heading">'+adj_name+'</h4>'
+    //                                                            +'<p class="list-group-item-text">lalalal</p>'
+                                                                +'</a>'
+                                                                +'</div>');
+    //                                for(var iii=0;iii<guide.length;iii++){
+    //                                    console.log(guide[iii].guide);
+    //                                }
+                                }
+                            }else{
+                                $("#main-"+idN).append('<div class="list-group">'
+                                                            +'<a href="#" class="list-group-item disabled">'
+                                                            +'<h4 class="list-group-item-heading">No guide available yet</h4>'
+    //                                                      +'<p class="list-group-item-text">lalalal</p>'
+                                                            +'</a>'
+                                                            +'</div>');
+                            }
+                        }
+                    }
+                });
+            }
+            
+            $(document).on("click",".adjustment",function(){
+//                console.warn(this.id);
+                getGuide(this.id);
+            });
+            
+            $(document).on("hidden.bs.modal", function (e) {
+                $(e.target).removeData("bs.modal").find("#container-modal").empty();
+            });
+            
+            function getGuide(id){
+                $.get("http://ec2-52-221-232-152.ap-southeast-1.compute.amazonaws.com/computer-workstation/public/api/guide/"+id,function(data,status,xhr){
+                    console.warn(data);
+                    for(var i=0;i<data.length;i++){
+                        var guide=data[i];
+                        $("#container-modal").append('<div class="row">'
+                                                     +'<div class="panel panel-default" id="panel-modal">'
+                                                     +'<div class="panel-body" id="panel-body-new">'
+                                                     +'<div class="col-md-2">'
+                                                     +'<img class="img-responsive" src="http://ec2-52-221-232-152.ap-southeast-1.compute.amazonaws.com/computer-workstation/public'+guide.url+'">'
+                                                     +'</div>'
+                                                     +'<div class="col-md-10">'
+                                                     +'<h4 class="guide"><strong>'+guide.guide+'</strong></h4>'
+//                                                     +'<h4><small>Product description</small></h4>'
+                                                     +'</div>'
+                                                     +'</div>'
+                                                     +'</div>'
+                                                     +'</div>'
+                                                    );
+                        
+                    }
+                    
+                });
+            }
+
+        });
+    </script>
+	</body>
+</html>

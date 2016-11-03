@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Prototype</title>
+		<link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/styling.css">
+        
+<!--		<link href="narrow-jumbotron.css" rel="stylesheet">-->
+		<style type="text/css"></style>
+		<style>
+		<style>
+			.panel panel-default {
+				padding: 70px;
+			}
+            .thumbnail{
+                border: 0px;
+            }
+            .reminder-button{
+                margin-right: 10px !important;
+            }
+            
+            
+</style>
+	</head>
+	<body>
+	<div class="container">
+<!--
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-xs-right">
+            <li class="nav-item active">
+              <a class="nav-link" href="Index.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+-->
+         <nav class="navbar navbar-inverse navbar-fixed-top" style="background-image:linear-gradient(to bottom,#6A2885 0,#3B3040 100%);padding-bottom: 10px;padding-top: 10px;">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+<!--              <img src="images/masthead-logo-BB9-1-new.png">-->
+                <img src="https://static.uq.net.au/v1/logos/corporate/uq-logo-white.svg">
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav pull-right">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="SymptomChecker.html">Symptom Checker</a></li>
+                <li><a href="WorkStationAssessment.php">Workstation Assessment</a></li>
+                <li><a href="Exercises.html">Exercises</a></li>
+<!--                <li><a href="SetupGuide.html">Ergonomic Guide</a></li>-->
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
+        </div>
+        <div class="container" id="container_x">
+            <div class="exercise">
+                
+                <h3>Exercises</h3>
+                <legend class="text-info">Pick exercises that suits you based on body part</legend>
+                <div id="exercise-part">
+<!--                    <div class="panel-group" id="accordion">-->
+    <!--
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                            Collapsible Group 1</a>
+                          </h4>
+                        </div>
+                        <div id="collapse1" class="panel-collapse collapse in">
+                          <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                          minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                          commodo consequat.</div>
+                        </div>
+                      </div>
+    -->
+
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    <div id="reminder" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Exercise Reminder</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Remind me every</label>
+                            <select class="form-control period">
+                                <option>30 minutes</option>
+                                <option>1 hour</option>
+                                <option>2 hour</option>
+                            </select>
+                        </div>
+                    </form>
+                    <div class="context"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success submit" data-dismiss="modal">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+	
+      
+<!--    </div>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script>
+        $(document).ready(function(){
+            
+            $.get("http://ec2-52-221-232-152.ap-southeast-1.compute.amazonaws.com/computer-workstation/public/api/exercises",function(data,status,xhr){
+                    console.warn(data);
+                    console.log(status);
+                    if(status=='success'){
+//                        var json=data.data;
+                        if(data.length>0){
+//                             $('.exercise').append("<div class='info'>"
+//                                                    +"<ol start='1' id='info_inside'>"
+//                                                    +"</ol>"
+//                                                    +"</div>");
+                        for(var i=0;i<data.length;i++){
+                            var exercise=data[i];
+                            var bodyPart=exercise.target_body_part;
+//                            console.log(bodyPart);
+                            var time=exercise.time;
+                            var warning=exercise.warning;
+                            var bodyPartText="";
+                            var exercise_id=exercise.exercise_id;
+                            for(var ii=0;ii<bodyPart.length;ii++){
+                                console.log(bodyPart[ii]); 
+                                var a="";
+                                if(bodyPart[ii].body_part=='shoulder'){
+                                    a+="Shoulder";
+                                }else if(bodyPart[ii].body_part=='neck'){
+                                    a+="Neck";
+                                }else if(bodyPart[ii].body_part=='wrist1H'){
+                                    a+="Wrist (mousing hand only)";
+                                }else if(bodyPart[ii].body_part=='wrist2H'){
+                                    a+="Wrist (both)";
+                                }else if(bodyPart[ii].body_part=="upperBack"){
+                                    a+="Upper Back / Both Shoulders";
+                                }else if(bodyPart[ii].body_part=="lowerBack1"){
+                                    a+="Lower Back";
+                                }else if(bodyPart[ii].body_part=="lowerBack2"){
+                                    a+="Lower Back / Hips / Legs";
+                                }else{
+                                    a+="Headaches / Eye strain";
+                                }
+//                                if(ii==bodyPart.length-1){
+//                                    bodyPartText+=a;
+//                                }else{
+//                                    bodyPartText+=a+", ";
+//                                }
+                                if($('#'+bodyPart[ii].body_part).length==0){
+                                    $('#exercise-part').append('<div class="panel-group" id="accordion-'+bodyPart[ii].body_part+'">'
+                                                                +"<p id='"+bodyPart[ii].body_part+"'>"+a+"</p>"
+                                                                +'</div>');
+                                }
+                                if(warning==null){
+                                    warning="None"
+                                }
+                                $("#accordion-"+bodyPart[ii].body_part).append('<div class="panel panel-default">'
+                                        +'<div class="panel-heading">'
+                                        +'<h4 class="panel-title">'
+                                        +'<a data-toggle="collapse" data-parent="#accordion" href="#'+bodyPart[ii].body_part+'\\|'+exercise_id+'">Exercise '+(i+1)+'</a>'
+                                        +'</h4></div>'
+                                        +'<div id="'+bodyPart[ii].body_part+'|'+exercise_id+'" class="panel-collapse collapse">'
+                                        +'<div class="panel-body">'
+                                        +'<div class="col-md-3">'
+                                        +'<img src="images/template.png" class="thumbnail">'
+                                        +'</div>'
+                                        +'<div class="col-md-9">'
+                                        +'<p><p><strong>Time:</strong> '+time+' minutes</p>'
+                                        +"<p><strong>Warning:</strong> "+warning+"</p>"
+                                        +"<p><strong>Instructions:</strong>"
+                                        +"<ol class='instructions' id='ins-"+bodyPart[ii].body_part+'|'+exercise_id+"'>"+"</ol>"
+                                        +'<a href="#" class="reminder-button btn btn-primary add-'+exercise_id+'" id="modal|'+bodyPart[ii].body_part+'|'+exercise_id+'" data-toggle="modal" data-target="#reminder">Place Reminder</a>'
+                                        +'<a href="#" class="delete-button btn btn-danger delete-'+exercise_id+'" id="delete|'+bodyPart[ii].body_part+'|'+exercise_id+'" style="display:none;">Delete Reminder</a>'
+                                        +'</div>'
+                                        +'</div>'
+                                        +'</div></div>');
+
+                                var instructions=exercise.instructions;
+    //                            var instructionsText="";
+                                for (var j=0;j<instructions.length;j++){
+                                    var instruction=instructions[j].instruction;
+                                    var rept=instructions[j].repitition;
+                                    var instructionsText=instruction+". "+"<strong> Repeat as much as "+rept
+                                        +" repeatition";
+                                    $("#ins-"+bodyPart[ii].body_part+'\\|'+exercise_id).append("<li>"
+                                                              +"<p>"+instructionsText
+                                                              +"</p>"
+                                                              +"</li>");
+                                    }
+                                
+                            }
+                            
+                            
+                            
+               
+                            }
+                        }
+                        if(localStorage.length>0){
+//                            console.log('a');
+//                            for(var ii=0;ii<localStorage.length;ii++){  
+//                                console.log(localStorage.key(ii));
+//                                $("#modal\\|"+localStorage.key(ii)).text("Edit time");
+//                                $("#delete\\|"+localStorage.key(ii)).show();
+//                            }  
+                            $(".add-"+localStorage.getItem("exercise_id")).text("Edit Reminder");
+                            $(".delete-"+localStorage.getItem("exercise_id")).show();
+                        }
+
+                    }
+                    
+                });
+            
+            $(document).on("hidden.bs.modal", function (e) {
+                $(e.target).removeData("bs.modal").find(".context").empty();
+                $(".submit").attr("id",'');
+            });
+            $(document).on('click','.reminder-button',function(){
+                var idPure=this.id.split('|')[2];
+                $(".context").append('<input type="hidden" id="hidden|'+this.id+'">'); 
+                $(".submit").attr("id",'submit|'+idPure);
+            });
+            $(document).on('click','.submit',function(){
+                var idPure=this.id.split('|')[1];
+                
+                $(".add-"+idPure).text("Edit Reminder");
+                $(".delete-"+idPure).show();
+//                setInterval(function(){
+                notify("Do the exercise now!");
+//                },(($('.period').val().split(" "))[0])*1000*60);
+                if(localStorage.getItem("exercise_id")!==undefined && localStorage.getItem("exercise_id")!==idPure){
+                    var idC=localStorage.getItem("exercise_id");
+                    $(".add-"+idC).text("Place Reminder");
+                    $(".delete-"+idC).hide();
+                }
+                localStorage.setItem("period",$(".period").val()); 
+                localStorage.setItem("exercise_id",idPure); 
+                
+                
+                
+            });
+            $(document).on('click','.delete-button',function(){
+                var idPure=this.id.split('|');
+                localStorage.clear(); 
+                $(".add-"+idPure[2]).text("Place Reminder");
+                $(".delete-"+idPure[2]).hide();
+            });
+        });
+        function notify(text){
+            console.log('selfie');
+            // Let's check if the browser supports notifications
+            if (!("Notification" in window)) {
+                alert("This browser does not support system notifications");
+            }
+
+            // Let's check whether notification permissions have already been granted
+            else if (Notification.permission === "granted") {
+                // If it's okay let's create a notification
+                var options={
+                    body:text,
+                    icon:"images/uq.png"
+                }
+                var notification = new Notification("Exercise Reminder",options);
+                setTimeout(notification.close.bind(notification), 10000); 
+                return notification;
+            }
+
+            // Otherwise, we need to ask the user for permission
+            else if (Notification.permission !== 'denied') {
+                Notification.requestPermission(function (permission) {
+                    // If the user accepts, let's create a notification
+                    if (permission === "granted") {
+                        var options={
+                            body:text,
+                            icon:"images/uq.png"
+                        }
+                        var notification = new Notification('Exercise Reminder',options);
+                        setTimeout(notification.close.bind(notification), 10000); 
+                        return notification;
+                    }
+                });
+            }
+
+              // Finally, if the user has denied notifications and you 
+              // want to be respectful there is no need to bother them any more.
+        }
+
+            
+        
+    </script>
+	</body>
+</html>
